@@ -7,8 +7,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 
+	"ecommerce/etrace"
 	ecommerce "ecommerce/generated"
 )
 
@@ -23,7 +25,14 @@ func randomItem() *ecommerce.Item {
 }
 
 func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	etrace.OtelSetup("client", "http://localhost:14268/api/traces")
+
+	conn, err := grpc.Dial("localhost:50051",
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
+	)
+
 	if err != nil {
 		log.Fatalf("failed to connect to order service: %v", err)
 	}

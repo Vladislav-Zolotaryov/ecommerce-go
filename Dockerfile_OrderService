@@ -13,6 +13,7 @@ RUN go mod download
 # Copy the source code and generated protobuf code
 COPY orderservice/ ./orderservice/
 COPY generated/ ./generated/
+COPY etrace/ ./etrace/
 
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux go build -o order_service_server ./orderservice/cmd/main.go
