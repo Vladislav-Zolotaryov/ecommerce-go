@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  order_service_server:
+    build:
+      context: .
+      dockerfile: Dockerfile_OrderService
+    ports:
+      - "50051:50051"
+    networks:
+      - services_network
+
+  payment_service_server:
+    build:
+      context: .
+      dockerfile: Dockerfile_PaymentService
+    ports:
+      - "50052:50052"
+    networks:
+      - services_network
+
+networks:
+  services_network:
